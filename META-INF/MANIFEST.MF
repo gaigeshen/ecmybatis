@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ecmybatis
+Bundle-SymbolicName: me.gaigeshen.eclipse.ecmybatis;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Activator: ecmybatis.Activator
+Bundle-Vendor: me.gaigeshen
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.11.1",
+ org.eclipse.jdt.ui;bundle-version="3.12.2",
+ org.eclipse.jdt.core;bundle-version="3.12.3"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/mysql-connector-java-5.1.36.jar,
+ lib/commons-lang3-3.5.jar

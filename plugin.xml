@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?eclipse version="3.4"?>
+
+<plugin>
+  <extension point="org.eclipse.ui.preferencePages">
+    <page class="ecmybatis.PreferencePage" id="ecmybatis.preference" name="Ecmybatis"></page>
+  </extension>
+  <extension point="org.eclipse.ui.views">
+    <category id="ecmybatis.views" name="Ecmybatis"></category>
+    <view id="ecmybatis.views.DatabaseView" name="Database" category="ecmybatis.views" class="ecmybatis.views.DatabaseView"></view>
+  </extension>
+  <extension point="org.eclipse.ui.commands">
+    <category id="ecmybatis.commands" name="Ecmybatis"></category>
+    <command id="ecmybatis.views.ClearTablesHandler" name="Clear" categoryId="ecmybatis.commands"></command>
+    <command id="ecmybatis.views.InitializeDataHandler" name="Load data" categoryId="ecmybatis.commands"></command>
+    <command id="ecmybatis.views.InitializeBaseClassesHandler" name="Initialize" categoryId="ecmybatis.commands"></command>
+    <command id="ecmybatis.views.GenerateDialogHandler" name="Generate" categoryId="ecmybatis.commands"></command>
+    <command id="ecmybatis.views.ShowPreferenceHandler" name="Preferences" categoryId="ecmybatis.commands"></command>
+  </extension>
+  <extension point="org.eclipse.ui.handlers">
+    <handler commandId="ecmybatis.views.ClearTablesHandler" class="ecmybatis.views.ClearTablesHandler"></handler>
+    <handler commandId="ecmybatis.views.InitializeDataHandler" class="ecmybatis.views.InitializeDataHandler"></handler>
+    <handler commandId="ecmybatis.views.InitializeBaseClassesHandler" class="ecmybatis.views.InitializeBaseClassesHandler"></handler>
+    <handler commandId="ecmybatis.views.GenerateDialogHandler" class="ecmybatis.views.GenerateDialogHandler"></handler>
+    <handler commandId="ecmybatis.views.ShowPreferenceHandler" class="ecmybatis.views.ShowPreferenceHandler"></handler>
+  </extension>
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:ecmybatis.views.DatabaseView?after=additions">
+      <command commandId="ecmybatis.views.ClearTablesHandler" style="push" label="Clear"></command>
+      <command commandId="ecmybatis.views.InitializeDataHandler" style="push" label="Load data"></command>
+      <command commandId="ecmybatis.views.InitializeBaseClassesHandler" style="push" label="Initialize">
+      </command>
+      <command commandId="ecmybatis.views.GenerateDialogHandler" style="push" label="Generate">
+        <visibleWhen checkEnabled="false">
+          <count value="1"></count>
+        </visibleWhen>
+      </command>
+      <command commandId="ecmybatis.views.ShowPreferenceHandler" style="push" label="Preferences"></command>
+    </menuContribution>
+  </extension>
+</plugin>
