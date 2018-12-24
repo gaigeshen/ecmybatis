@@ -40,7 +40,7 @@ import org.eclipse.ui.dialogs.SelectionDialog;
  * 
  * @author gaigeshen
  */
-public class InitializeDialog extends TitleAreaDialog {
+public class InitializeBaseClassesDialog extends TitleAreaDialog {
 
   private ComboViewer projectsField;
   private ComboViewer packagesRootField;;
@@ -61,7 +61,7 @@ public class InitializeDialog extends TitleAreaDialog {
    * 
    * @param parentShell
    */
-  public InitializeDialog(Shell parentShell) {
+  public InitializeBaseClassesDialog(Shell parentShell) {
     super(parentShell);
   }
   

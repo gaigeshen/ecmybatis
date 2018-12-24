@@ -18,7 +18,7 @@ import ecmybatis.util.MonitorUserJob;
  * 
  * @author gaigeshen
  */
-public class InitializeBaseClassesHandler extends AbstractHandler {
+public class InitializeBaseClassesDialogHandler extends AbstractHandler {
 
   @Override
   public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -28,7 +28,7 @@ public class InitializeBaseClassesHandler extends AbstractHandler {
       @Override
       protected void doWork() throws Exception {
         shell.getDisplay().asyncExec(() -> {
-          InitializeDialog dialog = new InitializeDialog(shell);
+          InitializeBaseClassesDialog dialog = new InitializeBaseClassesDialog(shell);
           if (dialog.open() == Window.OK) {
             try {
               Initializer.create().generate(dialog.getPackagesRoot(), dialog.getBasePackage(), dialog.getDomainPackage(), dialog.getDaoPackage());

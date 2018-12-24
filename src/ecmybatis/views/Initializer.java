@@ -20,6 +20,10 @@ import ecmybatis.Activator;
  * @author gaigeshen
  */
 public class Initializer {
+  
+  private static String SPRING_BEANS_LOCATOR_CONTENT;
+  private static final String SPRING_BEANS_LOCATOR_SIMPLE = "SpringBeansLocator";
+  private static final String SPRING_BEANS_LOCATOR_FILE = "/resource/base/SpringBeansLocator.java.txt";
 
   private static String BASE_DAO_CONTENT;
   private static final String BASE_DAO_SIMPLE = "BaseDao";
@@ -50,6 +54,7 @@ public class Initializer {
   private static final String MODEL_FILE = "/resource/base/domain/Model.java.txt";
   
   static {
+    initializeSpringBeansLocatorContent();
     initializeBaseDaoContent();
     initializeConditionContent();
     initializeDaoContent();
@@ -77,6 +82,7 @@ public class Initializer {
                        IPackageFragment daoPackage) {
     
     if (domainPackage.exists() && daoPackage.exists()) {
+      generateSpringBeansLocator(basePackage);
       generateBaseDao(daoPackage, domainPackage);
       generateCondition(daoPackage);
       generateDao(daoPackage, domainPackage);
@@ -85,6 +91,18 @@ public class Initializer {
       generateBaseModel(daoPackage, domainPackage);
       generateModel(domainPackage);
     }
+  }
+
+  /**
+   * 
+   * @param basepkg
+   */
+  private void generateSpringBeansLocator(IPackageFragment basepkg) {
+    String content = SPRING_BEANS_LOCATOR_CONTENT
+      .replaceAll("_basePackage_", basepkg.getElementName())
+      .replaceAll("_since_", new SimpleDateFormat("MM/dd yyyy").format(new Date()));
+    
+    generateFile(SPRING_BEANS_LOCATOR_SIMPLE, content, basepkg);
   }
 
   /**
@@ -116,6 +134,7 @@ public class Initializer {
   /**
    * 
    * @param daopkg
+   * @param domainpkg
    */
   private void generateDao(IPackageFragment daopkg, IPackageFragment domainpkg) {
     String content = DAO_CONTENT
@@ -141,6 +160,7 @@ public class Initializer {
   /**
    * 
    * @param daopkg
+   * @param basepkg
    */
   private void generateResultMappings(IPackageFragment daopkg, IPackageFragment basepkg) {
     String content = RESULT_MAPPINGS_CONTENT
@@ -154,6 +174,7 @@ public class Initializer {
   /**
    * 
    * @param daopkg
+   * @param domainpkg
    */
   private void generateBaseModel(IPackageFragment daopkg, IPackageFragment domainpkg) {
     String content = BASE_MODEL_CONTENT
@@ -166,7 +187,7 @@ public class Initializer {
   
   /**
    * 
-   * @param daopkg
+   * @param domainpkg
    */
   private void generateModel(IPackageFragment domainpkg) {
     String content = MODEL_CONTENT
@@ -176,6 +197,26 @@ public class Initializer {
     generateFile(MODEL_SIMPLE, content, domainpkg);
   }
 
+  private static void initializeSpringBeansLocatorContent() {
+    if (SPRING_BEANS_LOCATOR_CONTENT == null) {
+      try (InputStream in = Activator.resourceFile(SPRING_BEANS_LOCATOR_FILE)) {
+        if (in != null) {
+          ByteArrayOutputStream out = new ByteArrayOutputStream();
+          
+          byte[] buffer = new byte[1024];
+          int len = 0;
+          while ((len = in.read(buffer)) > 0) {
+            out.write(buffer, 0, len);
+          }
+          out.flush();
+          SPRING_BEANS_LOCATOR_CONTENT = out.toString("utf-8");
+        }
+      } catch (IOException e) {
+        throw new IllegalStateException("Could not initialize spring beans locator content", e);
+      }
+    }
+  }
+  
   private static void initializeBaseDaoContent() {
     if (BASE_DAO_CONTENT == null) {
       try (InputStream in = Activator.resourceFile(BASE_DAO_FILE)) {

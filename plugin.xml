@@ -20,7 +20,7 @@
   <extension point="org.eclipse.ui.handlers">
     <handler commandId="ecmybatis.views.ClearTablesHandler" class="ecmybatis.views.ClearTablesHandler"></handler>
     <handler commandId="ecmybatis.views.InitializeDataHandler" class="ecmybatis.views.InitializeDataHandler"></handler>
-    <handler commandId="ecmybatis.views.InitializeBaseClassesHandler" class="ecmybatis.views.InitializeBaseClassesHandler"></handler>
+    <handler commandId="ecmybatis.views.InitializeBaseClassesHandler" class="ecmybatis.views.InitializeBaseClassesDialogHandler"></handler>
     <handler commandId="ecmybatis.views.GenerateDialogHandler" class="ecmybatis.views.GenerateDialogHandler"></handler>
     <handler commandId="ecmybatis.views.ShowPreferenceHandler" class="ecmybatis.views.ShowPreferenceHandler"></handler>
   </extension>
