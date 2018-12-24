@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -246,48 +249,61 @@ public class Generator {
    * @param directory 映射文件的路径
    */
   private void generateMapper(IPackageFragmentRoot pkgRoot, String directory) {
-    
+    createMissingDirectory(directory);
     String fileName = directory + "/" + className + "Dao.xml";
-    
     File file = new File(fileName);
-    if (!file.exists()) {
-      
-      String daoName = className + "Dao";
-      String dao = daoName + ".java";
-      
-      ICompilationUnit daoUnit = ResourcesUtils.compilationUnit(pkgRoot, dao);
-      if (!daoUnit.exists()) {
-        throw new IllegalStateException(dao + " file not found");
-      }
-      
-      IType daoType = daoUnit.getType(daoName);
-      
-      StringBuilder fields = new StringBuilder("<id property=\"id\" column=\"id\"></id>");
-      columnDefs.forEach(col -> {
-        if (!col.getColumnName().equals("id")) {
-          fields.append("\n    ")
-                .append("<result property=\"")
-                .append(col.getPropertyName())
-                .append("\" column=\"")
-                .append(col.getColumnName())
-                .append("\"/>");
-        }
-      });
-      
-      String content = MAPPER_CONTENT
-        .replaceAll("_namespace_", daoType.getFullyQualifiedName())
-        .replaceAll("_table_", tableName)
-        .replaceAll("_fields_", fieldsFromColumns())
-        .replaceAll("_type_", className)
-        .replaceAll("_properties_", fields.toString());
-      
-      try (OutputStream out = new FileOutputStream(file)) {
-        out.write(content.getBytes(Charset.forName("utf-8")));
-      } catch (IOException e) {
-        throw new IllegalStateException("Could not write content to mapper file: " + fileName, e);
-      }
+    if (file.exists()) return;
+    
+    String daoName = className + "Dao";
+    String dao = daoName + ".java";
+    ICompilationUnit daoUnit = ResourcesUtils.compilationUnit(pkgRoot, dao);
+    if (!daoUnit.exists()) {
+      throw new IllegalStateException(dao + " file not found");
     }
     
+    StringBuilder fields = new StringBuilder("<id property=\"id\" column=\"id\"></id>");
+    columnDefs.forEach(col -> {
+      if (!col.getColumnName().equals("id")) {
+        fields.append("\n    ")
+              .append("<result property=\"")
+              .append(col.getPropertyName())
+              .append("\" column=\"")
+              .append(col.getColumnName())
+              .append("\"/>");
+      }
+    });
+    
+    String content = MAPPER_CONTENT
+      .replaceAll("_namespace_", daoUnit.getType(daoName).getFullyQualifiedName())
+      .replaceAll("_table_", tableName)
+      .replaceAll("_fields_", fieldsFromColumns())
+      .replaceAll("_type_", className)
+      .replaceAll("_properties_", fields.toString());
+    
+    try (OutputStream out = new FileOutputStream(file)) {
+      out.write(content.getBytes(Charset.forName("utf-8")));
+    } catch (IOException e) {
+      throw new IllegalStateException("Could not write content to mapper file: " + fileName, e);
+    }
+  }
+  
+  /**
+   * 创建缺失的目录
+   * 
+   * @param directory 目录
+   */
+  private void createMissingDirectory(String directory) {
+    Path path = Paths.get(directory);
+    if (Files.exists(path)) {
+      return;
+    }
+    if (!Files.exists(path)) {
+      try {
+        Files.createDirectories(path);
+      } catch (IOException e) {
+        throw new IllegalStateException("Could not create directory: " + directory);
+      }
+    }
   }
   
   /**
